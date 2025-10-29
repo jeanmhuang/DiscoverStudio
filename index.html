@@ -1,296 +1,387 @@
-import React, { useState, useEffect } from 'react';
-import { Sparkles, Leaf, Scissors, Palette, Heart, Music, Sun, Flower2 } from 'lucide-react';
-
-export default function DiscoverLab() {
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [stylingMode, setStylingMode] = useState(false);
-  const [selectedOutfit, setSelectedOutfit] = useState([]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrolled = window.scrollY;
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      setScrollProgress((scrolled / maxScroll) * 100);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const sustainablePractices = [
-    {
-      icon: <Scissors className="w-12 h-12" />,
-      title: "Zero-Waste Pattern Cutting",
-      description: "Every piece of fabric is precious. We create puzzle-like patterns that use 100% of the material, turning potential waste into creative design features.",
-      color: "bg-orange-400"
-    },
-    {
-      icon: <Leaf className="w-12 h-12" />,
-      title: "Plant-Dyed Fabrics",
-      description: "Our colors come from nature's palette: avocado pits for soft pinks, indigo for deep blues, and onion skins for golden yellows. No synthetic dyes, ever.",
-      color: "bg-green-400"
-    },
-    {
-      icon: <Palette className="w-12 h-12" />,
-      title: "Upcycled Materials",
-      description: "Vintage textiles get a second life in our studio. We reimagine forgotten fabrics into contemporary pieces that tell stories across generations.",
-      color: "bg-purple-400"
-    },
-    {
-      icon: <Heart className="w-12 h-12" />,
-      title: "Slow Fashion Philosophy",
-      description: "We make pieces meant to be loved for years, not seasons. Each item is crafted with intention, care, and a commitment to timeless style.",
-      color: "bg-pink-400"
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Discover Lab: Joyful Noise Studio</title>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap');
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
     }
-  ];
-
-  const qAndA = [
-    {
-      q: "If your studio was a song, what would it sound like?",
-      a: "Definitely something by Lizzo mixed with a ukulele orchestra! Upbeat, confident, a little quirky, and impossible not to dance to."
-    },
-    {
-      q: "What's the weirdest thing in your studio right now?",
-      a: "A collection of 47 vintage buttons shaped like tiny vegetables. I'm convinced they'll be perfect for something... someday!"
-    },
-    {
-      q: "Coffee or tea? And why does it matter?",
-      a: "Hibiscus tea! It stains my hands the most beautiful pink, which is basically free hand-dyed manicure research."
-    },
-    {
-      q: "If you could dress one fictional character, who would it be?",
-      a: "Ms. Frizzle from The Magic School Bus. That woman understood the assignment before assignments were cool."
-    },
-    {
-      q: "What would you do if fashion didn't exist?",
-      a: "Probably design really elaborate costumes for dogs. Fashion for pups is still fashion, right?"
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
     }
-  ];
-
-  const collection = [
-    { id: 1, name: "Sunshine Wrap Top", color: "bg-yellow-300", pattern: "🌻", type: "top" },
-    { id: 2, name: "Cloud Nine Pants", color: "bg-blue-200", pattern: "☁️", type: "bottom" },
-    { id: 3, name: "Berry Bliss Dress", color: "bg-pink-300", pattern: "🍓", type: "dress" },
-    { id: 4, name: "Meadow Dance Skirt", color: "bg-green-300", pattern: "🌿", type: "bottom" },
-    { id: 5, name: "Sunset Crop", color: "bg-orange-300", pattern: "🌅", type: "top" },
-    { id: 6, name: "Rainbow Overalls", color: "bg-purple-200", pattern: "🌈", type: "dress" }
-  ];
-
-  const toggleOutfitItem = (item) => {
-    if (selectedOutfit.find(i => i.id === item.id)) {
-      setSelectedOutfit(selectedOutfit.filter(i => i.id !== item.id));
-    } else {
-      setSelectedOutfit([...selectedOutfit, item]);
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
     }
-  };
+    .animate-bounce {
+      animation: bounce 2s infinite;
+    }
+    .animate-pulse {
+      animation: pulse 2s infinite;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
 
-  return (
-    <div className="bg-gradient-to-br from-yellow-50 via-pink-50 to-blue-50 min-h-screen font-sans">
-      {/* Progress Bar */}
-      <div className="fixed top-0 left-0 right-0 h-2 bg-white bg-opacity-50 z-50">
-        <div 
-          className="h-full bg-gradient-to-r from-pink-400 via-yellow-400 to-green-400 transition-all duration-300"
-          style={{ width: `${scrollProgress}%` }}
-        />
-      </div>
+  <script type="text/babel">
+    const { useState, useEffect } = React;
 
-      {/* Hero Section - "Enter the Studio" */}
-      <section className="min-h-screen flex items-center justify-center relative overflow-hidden px-6 py-20">
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-10 left-10 text-6xl animate-pulse">🎨</div>
-          <div className="absolute top-32 right-20 text-5xl animate-bounce">✨</div>
-          <div className="absolute bottom-20 left-1/4 text-7xl animate-pulse">🌸</div>
-          <div className="absolute top-1/3 right-1/3 text-6xl animate-bounce">🌈</div>
-          <div className="absolute bottom-32 right-12 text-5xl animate-pulse">☀️</div>
-        </div>
-        
-        <div className="text-center relative z-10 max-w-4xl">
-          <div className="inline-block mb-6 px-6 py-3 bg-white rounded-full shadow-lg">
-            <p className="text-pink-500 font-bold tracking-widest text-sm flex items-center gap-2">
-              <Sparkles className="w-4 h-4" />
-              DISCOVER LAB
-              <Sparkles className="w-4 h-4" />
-            </p>
-          </div>
-          
-          <h1 className="text-7xl md:text-8xl font-black mb-6 leading-none">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-yellow-500 to-green-500">
-              Joyful Noise
-            </span>
-            <br />
-            <span className="text-6xl md:text-7xl text-gray-800">Studio</span>
-          </h1>
-          
-          <p className="text-2xl text-gray-700 mb-8 max-w-2xl mx-auto leading-relaxed">
-            Where <span className="font-bold text-pink-500">zero-waste magic</span> meets 
-            <span className="font-bold text-yellow-500"> plant-dyed dreams</span> and 
-            <span className="font-bold text-green-500"> unapologetic color</span>
-          </p>
-          
-          <div className="flex gap-4 justify-center flex-wrap text-gray-600 text-lg">
-            <span className="px-6 py-3 bg-white rounded-full shadow-md">🌱 100% Sustainable</span>
-            <span className="px-6 py-3 bg-white rounded-full shadow-md">🎨 Handcrafted</span>
-            <span className="px-6 py-3 bg-white rounded-full shadow-md">✨ Playfully Bold</span>
-          </div>
-          
-          <div className="mt-12 animate-bounce">
-            <Music className="w-8 h-8 mx-auto text-pink-400" />
-            <p className="text-sm text-gray-500 mt-2">Scroll to explore the studio</p>
-          </div>
-        </div>
-      </section>
+    // Lucide icons as SVG components
+    const Sparkles = ({ className }) => (
+      <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+      </svg>
+    );
 
-      {/* Playful Process Interactive Scroller */}
-      <section className="py-20 px-6 bg-white">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-5xl md:text-6xl font-black text-center mb-4 text-gray-800">
-            The Playful Process
-          </h2>
-          <p className="text-center text-xl text-gray-600 mb-16 max-w-2xl mx-auto">
-            Every piece has a story. Here's how we turn sustainability into pure joy.
-          </p>
-          
-          <div className="space-y-12">
-            {sustainablePractices.map((practice, index) => (
-              <div 
-                key={index}
-                className="flex flex-col md:flex-row items-center gap-8 p-8 rounded-3xl bg-gradient-to-br from-white to-gray-50 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
-              >
-                <div className={`${practice.color} p-8 rounded-2xl text-white flex-shrink-0 transform hover:rotate-12 transition-transform duration-300`}>
-                  {practice.icon}
-                </div>
-                <div className="flex-1 text-center md:text-left">
-                  <h3 className="text-3xl font-bold text-gray-800 mb-3">{practice.title}</h3>
-                  <p className="text-lg text-gray-600 leading-relaxed">{practice.description}</p>
-                </div>
+    const Scissors = ({ className }) => (
+      <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
+      </svg>
+    );
+
+    const Leaf = ({ className }) => (
+      <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+      </svg>
+    );
+
+    const Palette = ({ className }) => (
+      <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+      </svg>
+    );
+
+    const Heart = ({ className }) => (
+      <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+      </svg>
+    );
+
+    const Music = ({ className }) => (
+      <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+      </svg>
+    );
+
+    const Sun = ({ className }) => (
+      <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+      </svg>
+    );
+
+    const Flower = ({ className }) => (
+      <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+      </svg>
+    );
+
+    function DiscoverLab() {
+      const [scrollProgress, setScrollProgress] = useState(0);
+      const [selectedItem, setSelectedItem] = useState(null);
+      const [stylingMode, setStylingMode] = useState(false);
+      const [selectedOutfit, setSelectedOutfit] = useState([]);
+
+      useEffect(() => {
+        const handleScroll = () => {
+          const scrolled = window.scrollY;
+          const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+          setScrollProgress((scrolled / maxScroll) * 100);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+      }, []);
+
+      const sustainablePractices = [
+        {
+          icon: <Scissors className="w-12 h-12" />,
+          title: "Zero-Waste Pattern Cutting",
+          description: "Every piece of fabric is precious. We create puzzle-like patterns that use 100% of the material, turning potential waste into creative design features.",
+          color: "bg-orange-400"
+        },
+        {
+          icon: <Leaf className="w-12 h-12" />,
+          title: "Plant-Dyed Fabrics",
+          description: "Our colors come from nature's palette: avocado pits for soft pinks, indigo for deep blues, and onion skins for golden yellows. No synthetic dyes, ever.",
+          color: "bg-green-400"
+        },
+        {
+          icon: <Palette className="w-12 h-12" />,
+          title: "Upcycled Materials",
+          description: "Vintage textiles get a second life in our studio. We reimagine forgotten fabrics into contemporary pieces that tell stories across generations.",
+          color: "bg-purple-400"
+        },
+        {
+          icon: <Heart className="w-12 h-12" />,
+          title: "Slow Fashion Philosophy",
+          description: "We make pieces meant to be loved for years, not seasons. Each item is crafted with intention, care, and a commitment to timeless style.",
+          color: "bg-pink-400"
+        }
+      ];
+
+      const qAndA = [
+        {
+          q: "If your studio was a song, what would it sound like?",
+          a: "Definitely something by Lizzo mixed with a ukulele orchestra! Upbeat, confident, a little quirky, and impossible not to dance to."
+        },
+        {
+          q: "What's the weirdest thing in your studio right now?",
+          a: "A collection of 47 vintage buttons shaped like tiny vegetables. I'm convinced they'll be perfect for something... someday!"
+        },
+        {
+          q: "Coffee or tea? And why does it matter?",
+          a: "Hibiscus tea! It stains my hands the most beautiful pink, which is basically free hand-dyed manicure research."
+        },
+        {
+          q: "If you could dress one fictional character, who would it be?",
+          a: "Ms. Frizzle from The Magic School Bus. That woman understood the assignment before assignments were cool."
+        },
+        {
+          q: "What would you do if fashion didn't exist?",
+          a: "Probably design really elaborate costumes for dogs. Fashion for pups is still fashion, right?"
+        }
+      ];
+
+      const collection = [
+        { id: 1, name: "Sunshine Wrap Top", color: "bg-yellow-300", pattern: "🌻", type: "top" },
+        { id: 2, name: "Cloud Nine Pants", color: "bg-blue-200", pattern: "☁️", type: "bottom" },
+        { id: 3, name: "Berry Bliss Dress", color: "bg-pink-300", pattern: "🍓", type: "dress" },
+        { id: 4, name: "Meadow Dance Skirt", color: "bg-green-300", pattern: "🌿", type: "bottom" },
+        { id: 5, name: "Sunset Crop", color: "bg-orange-300", pattern: "🌅", type: "top" },
+        { id: 6, name: "Rainbow Overalls", color: "bg-purple-200", pattern: "🌈", type: "dress" }
+      ];
+
+      const toggleOutfitItem = (item) => {
+        if (selectedOutfit.find(i => i.id === item.id)) {
+          setSelectedOutfit(selectedOutfit.filter(i => i.id !== item.id));
+        } else {
+          setSelectedOutfit([...selectedOutfit, item]);
+        }
+      };
+
+      return (
+        <div className="bg-gradient-to-br from-yellow-50 via-pink-50 to-blue-50 min-h-screen">
+          {/* Progress Bar */}
+          <div className="fixed top-0 left-0 right-0 h-2 bg-white bg-opacity-50 z-50">
+            <div 
+              className="h-full bg-gradient-to-r from-pink-400 via-yellow-400 to-green-400 transition-all duration-300"
+              style={{ width: `${scrollProgress}%` }}
+            />
+          </div>
+
+          {/* Hero Section */}
+          <section className="min-h-screen flex items-center justify-center relative overflow-hidden px-6 py-20">
+            <div className="absolute inset-0 opacity-20">
+              <div className="absolute top-10 left-10 text-6xl animate-pulse">🎨</div>
+              <div className="absolute top-32 right-20 text-5xl animate-bounce">✨</div>
+              <div className="absolute bottom-20 left-1/4 text-7xl animate-pulse">🌸</div>
+              <div className="absolute top-1/3 right-1/3 text-6xl animate-bounce">🌈</div>
+              <div className="absolute bottom-32 right-12 text-5xl animate-pulse">☀️</div>
+            </div>
+            
+            <div className="text-center relative z-10 max-w-4xl">
+              <div className="inline-block mb-6 px-6 py-3 bg-white rounded-full shadow-lg">
+                <p className="text-pink-500 font-bold tracking-widest text-sm flex items-center gap-2 justify-center">
+                  <Sparkles className="w-4 h-4" />
+                  DISCOVER LAB
+                  <Sparkles className="w-4 h-4" />
+                </p>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Meet the Maker - Q&A */}
-      <section className="py-20 px-6 bg-gradient-to-br from-pink-100 via-yellow-100 to-green-100">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl md:text-6xl font-black mb-4 text-gray-800">
-              Meet the Maker
-            </h2>
-            <p className="text-xl text-gray-600">The questions everyone's afraid to ask (but we're answering anyway)</p>
-          </div>
-          
-          <div className="space-y-6">
-            {qAndA.map((item, index) => (
-              <div 
-                key={index}
-                className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
-              >
-                <div className="flex items-start gap-4">
-                  <span className="text-4xl flex-shrink-0">{index % 2 === 0 ? '🎨' : '💭'}</span>
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold text-pink-600 mb-3">{item.q}</h3>
-                    <p className="text-lg text-gray-700 leading-relaxed">{item.a}</p>
-                  </div>
-                </div>
+              
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black mb-6 leading-none">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-yellow-500 to-green-500">
+                  Joyful Noise
+                </span>
+                <br />
+                <span className="text-4xl md:text-6xl lg:text-7xl text-gray-800">Studio</span>
+              </h1>
+              
+              <p className="text-xl md:text-2xl text-gray-700 mb-8 max-w-2xl mx-auto leading-relaxed">
+                Where <span className="font-bold text-pink-500">zero-waste magic</span> meets 
+                <span className="font-bold text-yellow-500"> plant-dyed dreams</span> and 
+                <span className="font-bold text-green-500"> unapologetic color</span>
+              </p>
+              
+              <div className="flex gap-4 justify-center flex-wrap text-gray-600 text-base md:text-lg">
+                <span className="px-4 md:px-6 py-2 md:py-3 bg-white rounded-full shadow-md">🌱 100% Sustainable</span>
+                <span className="px-4 md:px-6 py-2 md:py-3 bg-white rounded-full shadow-md">🎨 Handcrafted</span>
+                <span className="px-4 md:px-6 py-2 md:py-3 bg-white rounded-full shadow-md">✨ Playfully Bold</span>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
+              
+              <div className="mt-12 animate-bounce">
+                <Music className="w-8 h-8 mx-auto text-pink-400" />
+                <p className="text-sm text-gray-500 mt-2">Scroll to explore the studio</p>
+              </div>
+            </div>
+          </section>
 
-      {/* Collection Playground */}
-      <section className="py-20 px-6 bg-white">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-5xl md:text-6xl font-black mb-4 text-gray-800">
-              Collection Playground
-            </h2>
-            <p className="text-xl text-gray-600 mb-8">
-              Click items to play with styling and mix + match your perfect outfit!
-            </p>
-            <button
-              onClick={() => setStylingMode(!stylingMode)}
-              className={`px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 ${
-                stylingMode 
-                  ? 'bg-gradient-to-r from-pink-500 to-purple-500 text-white shadow-xl' 
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            >
-              {stylingMode ? '✨ Styling Mode Active!' : '🎨 Enter Styling Mode'}
-            </button>
-          </div>
-
-          {/* Selected Outfit Display */}
-          {stylingMode && selectedOutfit.length > 0 && (
-            <div className="mb-12 p-8 bg-gradient-to-r from-pink-100 to-purple-100 rounded-3xl">
-              <h3 className="text-2xl font-bold text-center mb-6 text-gray-800">Your Styled Look</h3>
-              <div className="flex flex-wrap justify-center gap-4">
-                {selectedOutfit.map(item => (
+          {/* Playful Process */}
+          <section className="py-20 px-6 bg-white">
+            <div className="max-w-6xl mx-auto">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-center mb-4 text-gray-800">
+                The Playful Process
+              </h2>
+              <p className="text-center text-lg md:text-xl text-gray-600 mb-16 max-w-2xl mx-auto">
+                Every piece has a story. Here's how we turn sustainability into pure joy.
+              </p>
+              
+              <div className="space-y-12">
+                {sustainablePractices.map((practice, index) => (
                   <div 
-                    key={item.id}
-                    className={`${item.color} p-6 rounded-2xl shadow-lg text-center cursor-pointer hover:scale-110 transition-transform`}
-                    onClick={() => toggleOutfitItem(item)}
+                    key={index}
+                    className="flex flex-col md:flex-row items-center gap-8 p-8 rounded-3xl bg-gradient-to-br from-white to-gray-50 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
                   >
-                    <div className="text-5xl mb-2">{item.pattern}</div>
-                    <p className="font-bold text-gray-800 text-sm">{item.name}</p>
+                    <div className={`${practice.color} p-8 rounded-2xl text-white flex-shrink-0 transform hover:rotate-12 transition-transform duration-300`}>
+                      {practice.icon}
+                    </div>
+                    <div className="flex-1 text-center md:text-left">
+                      <h3 className="text-2xl md:text-3xl font-bold text-gray-800 mb-3">{practice.title}</h3>
+                      <p className="text-base md:text-lg text-gray-600 leading-relaxed">{practice.description}</p>
+                    </div>
                   </div>
                 ))}
               </div>
-              <button
-                onClick={() => setSelectedOutfit([])}
-                className="mt-6 mx-auto block px-6 py-2 bg-white rounded-full text-gray-700 hover:bg-gray-100 transition-colors"
-              >
-                Clear Outfit
-              </button>
             </div>
-          )}
+          </section>
 
-          {/* Collection Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-            {collection.map((item) => (
-              <div
-                key={item.id}
-                onClick={() => {
-                  if (stylingMode) {
-                    toggleOutfitItem(item);
-                  } else {
-                    setSelectedItem(selectedItem === item.id ? null : item.id);
-                  }
-                }}
-                className={`${item.color} p-8 rounded-3xl text-center cursor-pointer transition-all duration-300 ${
-                  selectedItem === item.id || selectedOutfit.find(i => i.id === item.id)
-                    ? 'scale-110 shadow-2xl ring-4 ring-pink-400'
-                    : 'hover:scale-105 shadow-lg hover:shadow-xl'
-                }`}
-              >
-                <div className="text-7xl mb-4">{item.pattern}</div>
-                <h3 className="font-black text-xl text-gray-800 mb-2">{item.name}</h3>
-                <span className="inline-block px-4 py-2 bg-white bg-opacity-50 rounded-full text-sm font-bold text-gray-700">
-                  {item.type}
-                </span>
-                {stylingMode && selectedOutfit.find(i => i.id === item.id) && (
-                  <div className="mt-3 text-2xl">✓</div>
-                )}
+          {/* Meet the Maker */}
+          <section className="py-20 px-6 bg-gradient-to-br from-pink-100 via-yellow-100 to-green-100">
+            <div className="max-w-4xl mx-auto">
+              <div className="text-center mb-16">
+                <h2 className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 text-gray-800">
+                  Meet the Maker
+                </h2>
+                <p className="text-lg md:text-xl text-gray-600">The questions everyone's afraid to ask (but we're answering anyway)</p>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
+              
+              <div className="space-y-6">
+                {qAndA.map((item, index) => (
+                  <div 
+                    key={index}
+                    className="bg-white p-6 md:p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
+                  >
+                    <div className="flex items-start gap-4">
+                      <span className="text-3xl md:text-4xl flex-shrink-0">{index % 2 === 0 ? '🎨' : '💭'}</span>
+                      <div className="flex-1">
+                        <h3 className="text-lg md:text-xl font-bold text-pink-600 mb-3">{item.q}</h3>
+                        <p className="text-base md:text-lg text-gray-700 leading-relaxed">{item.a}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
 
-      {/* Footer */}
-      <footer className="py-12 px-6 bg-gradient-to-r from-pink-500 via-yellow-500 to-green-500 text-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <h3 className="text-3xl font-black mb-4">Ready to Make Some Joyful Noise?</h3>
-          <p className="text-xl mb-8">Let's create something colorful together.</p>
-          <div className="flex gap-6 justify-center items-center flex-wrap">
-            <Sparkles className="w-6 h-6" />
-            <span className="text-lg">Discover More Designers</span>
-            <Sun className="w-6 h-6" />
-            <span className="text-lg">Shop The Collection</span>
-            <Flower2 className="w-6 h-6" />
-          </div>
+          {/* Collection Playground */}
+          <section className="py-20 px-6 bg-white">
+            <div className="max-w-6xl mx-auto">
+              <div className="text-center mb-12">
+                <h2 className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 text-gray-800">
+                  Collection Playground
+                </h2>
+                <p className="text-lg md:text-xl text-gray-600 mb-8">
+                  Click items to play with styling and mix + match your perfect outfit!
+                </p>
+                <button
+                  onClick={() => setStylingMode(!stylingMode)}
+                  className={`px-6 md:px-8 py-3 md:py-4 rounded-full font-bold text-base md:text-lg transition-all duration-300 ${
+                    stylingMode 
+                      ? 'bg-gradient-to-r from-pink-500 to-purple-500 text-white shadow-xl' 
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
+                >
+                  {stylingMode ? '✨ Styling Mode Active!' : '🎨 Enter Styling Mode'}
+                </button>
+              </div>
+
+              {/* Selected Outfit Display */}
+              {stylingMode && selectedOutfit.length > 0 && (
+                <div className="mb-12 p-6 md:p-8 bg-gradient-to-r from-pink-100 to-purple-100 rounded-3xl">
+                  <h3 className="text-xl md:text-2xl font-bold text-center mb-6 text-gray-800">Your Styled Look</h3>
+                  <div className="flex flex-wrap justify-center gap-4">
+                    {selectedOutfit.map(item => (
+                      <div 
+                        key={item.id}
+                        className={`${item.color} p-4 md:p-6 rounded-2xl shadow-lg text-center cursor-pointer hover:scale-110 transition-transform`}
+                        onClick={() => toggleOutfitItem(item)}
+                      >
+                        <div className="text-4xl md:text-5xl mb-2">{item.pattern}</div>
+                        <p className="font-bold text-gray-800 text-xs md:text-sm">{item.name}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <button
+                    onClick={() => setSelectedOutfit([])}
+                    className="mt-6 mx-auto block px-6 py-2 bg-white rounded-full text-gray-700 hover:bg-gray-100 transition-colors"
+                  >
+                    Clear Outfit
+                  </button>
+                </div>
+              )}
+
+              {/* Collection Grid */}
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+                {collection.map((item) => (
+                  <div
+                    key={item.id}
+                    onClick={() => {
+                      if (stylingMode) {
+                        toggleOutfitItem(item);
+                      } else {
+                        setSelectedItem(selectedItem === item.id ? null : item.id);
+                      }
+                    }}
+                    className={`${item.color} p-6 md:p-8 rounded-3xl text-center cursor-pointer transition-all duration-300 ${
+                      selectedItem === item.id || selectedOutfit.find(i => i.id === item.id)
+                        ? 'scale-110 shadow-2xl ring-4 ring-pink-400'
+                        : 'hover:scale-105 shadow-lg hover:shadow-xl'
+                    }`}
+                  >
+                    <div className="text-5xl md:text-7xl mb-4">{item.pattern}</div>
+                    <h3 className="font-black text-lg md:text-xl text-gray-800 mb-2">{item.name}</h3>
+                    <span className="inline-block px-3 md:px-4 py-1 md:py-2 bg-white bg-opacity-50 rounded-full text-xs md:text-sm font-bold text-gray-700">
+                      {item.type}
+                    </span>
+                    {stylingMode && selectedOutfit.find(i => i.id === item.id) && (
+                      <div className="mt-3 text-2xl">✓</div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Footer */}
+          <footer className="py-12 px-6 bg-gradient-to-r from-pink-500 via-yellow-500 to-green-500 text-white">
+            <div className="max-w-4xl mx-auto text-center">
+              <h3 className="text-2xl md:text-3xl font-black mb-4">Ready to Make Some Joyful Noise?</h3>
+              <p className="text-lg md:text-xl mb-8">Let's create something colorful together.</p>
+              <div className="flex gap-4 md:gap-6 justify-center items-center flex-wrap text-sm md:text-base">
+                <Sparkles className="w-5 h-5 md:w-6 md:h-6" />
+                <span className="text-base md:text-lg">Discover More Designers</span>
+                <Sun className="w-5 h-5 md:w-6 md:h-6" />
+                <span className="text-base md:text-lg">Shop The Collection</span>
+                <Flower className="w-5 h-5 md:w-6 md:h-6" />
+              </div>
+            </div>
+          </footer>
         </div>
-      </footer>
-    </div>
-  );
-}
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<DiscoverLab />);
+  </script>
+</body>
+</html>
